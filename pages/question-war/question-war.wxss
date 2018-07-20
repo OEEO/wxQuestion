@@ -1,0 +1,58 @@
+/* pages/question-war/question-war.wxss */
+.begin-btn {
+  position: relative;
+  z-index: 3;
+}
+.option {
+  margin-top: 20rpx;
+}
+.option.active {
+  background-color: #00b26a;
+  color: #fff;
+}
+.title {
+  font-size: 50rpx;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+.question-box {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 80vw;
+  margin: 0 auto;
+  transition: all 0.5s ease-in-out;
+  z-index: 3;
+}
+.question-box.leave {
+  left: -800rpx;
+  width: 0;
+}
+.question-box.enter {
+  left: 800rpx;
+  z-index: 0;
+}
+.result {
+  color: #aa0000;
+  font-size: 40rpx;
+  text-align: center;
+  margin-top: 80rpx;
+}
+.modal-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title-num {
+  align-self: flex-start;
+  margin-top: 30rpx;
+}

@@ -1,0 +1,6 @@
+<import src="../../wxParse/wxParse.wxml" />
+<view class='container'>
+  <view>
+    <template is="wxParse" data="{{ wxParseData: post.nodes }}"></template>
+  </view>
+</view>

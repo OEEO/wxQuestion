@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/index/index",    
+    "pages/question-war/question-war",
+    "pages/logs/logs",
+    "pages/articles/articles"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  }
+}

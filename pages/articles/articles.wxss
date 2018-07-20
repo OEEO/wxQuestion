@@ -1,0 +1,5 @@
+/* pages/articles/articles.wxss */
+ @import "../../wxParse/wxParse.wxss"; 
+.ql-align-center {
+  text-align: center;
+}

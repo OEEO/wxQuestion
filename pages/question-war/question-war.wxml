@@ -1,0 +1,34 @@
+<view class='container'>
+  <view wx:if='{{ isBegin === false }}'>
+    <button type='primary' bindtap='getQuestions' class='begin-btn'>开始对战</button>
+    <view class='levels'>
+      
+    </view>
+  </view>
+
+  <view class='question-box {{ move === "out" ? "leave" : move === "in" ? "enter" : "" }}'>
+    <block wx:if='{{ questions.length > 0 }}'>
+        <view>
+          <view class='title'>{{ questions[curIndex].title }}</view>
+          <block wx:if="{{ questions[curIndex].answers.length > 0 }}" wx:for='{{ questions[curIndex].answers }}' wx:key="index">
+            <button class='option {{ index === clickIndex ? "active" : "" }}' 
+              bindtap='selectOption' 
+              data-index="{{ index }}"
+            >{{ item }}</button>
+          </block>
+        </view>
+    </block>
+    <block wx:if='{{ result[curIndex] !== undefined }}'>
+      <view class='result'>
+        {{ result[curIndex] ? '回答正确' : '你答错了' }}
+      </view>
+    </block>
+  </view>
+  <view class='modal-box'>
+    <view class='title title-num' wx:if="{{ isShowTitleNum }}">第{{ curIndex ? numToCh[curIndex] : '一' }}题</view>
+    <view class='game-over' wx:if='{{ isGameOver }}'>
+      <view class='title'>游戏结束</view>
+      <view>你答对了{{ correctNum }}题</view>
+    </view>
+  </view>
+</view>
