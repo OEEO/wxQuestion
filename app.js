@@ -28,8 +28,8 @@ App({
             }
           });
 
-          that.ajax('wxlogin', 'POST', { code: res.code }, res => {
-            
+          that.ajax('wxlogin/manual', 'POST', { code: res.code }, res => {
+            console.log('success', res)
           })
 
         }
