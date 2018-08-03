@@ -1,8 +1,28 @@
 <view class='container'>
-  <view wx:if='{{ isBegin === false }}'>
-    <button type='primary' bindtap='getQuestions' class='begin-btn'>开始对战</button>
+  <view class='zindex3'>
+    <view>房间号: {{ room }}</view>
+    <view class='players-wrap'>
+      <view class='player-avatar-wrap'>
+        <block wx:if='{{ player1 !== null }}'>
+          <image  mode='widthFix' src='{{ player1.avatarUrl }}' class='player-avatar'></image>      
+        </block>
+      </view>
+      <view class='player-avatar-wrap'>
+        <block wx:if='{{ player2 !== null }}'>
+          <image mode='widthFix' src='{{ player2.avatarUrl }}' class='player-avatar'></image>
+        </block>
+        <block wx:else>
+          <view class='invite-friend-wrap'>
+            <image src='/images/add-player.png' mode='widthFix' class='invite-friend-bg'></image>
+            <button open-type='share' class='invite-friend-btn'></button>
+          </view>
+        </block>
+      </view>
+    </view>
+    
     <view class='levels'>
-      
+      <button type='primary' bindtap='startGame' class='begin-btn' wx:if='{{ isBegin === false }}'>开始对战</button>
+      <view class='title title-num' wx:else>第{{ curIndex ? numToCh[curIndex] : '一' }}题</view>
     </view>
   </view>
 
@@ -25,7 +45,6 @@
     </block>
   </view>
   <view class='modal-box'>
-    <view class='title title-num' wx:if="{{ isShowTitleNum }}">第{{ curIndex ? numToCh[curIndex] : '一' }}题</view>
     <view class='game-over' wx:if='{{ isGameOver }}'>
       <view class='title'>游戏结束</view>
       <view>你答对了{{ correctNum }}题</view>

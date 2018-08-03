@@ -14,6 +14,16 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+const getQueryString = function (name) {
+  let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+  let r = window.location.search.slice(1).match(reg);
+  if (r !== null) {
+    return decodeURI(r[2]);
+  }
+  return null;
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  getQueryString: getQueryString
 }

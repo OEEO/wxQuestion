@@ -1,7 +1,9 @@
 /**app.wxss**/
-.container {
+page {
   height: 100%;
+}
+.container {
+  min-height: 100%;
   display: flex;
-  flex-direction: column;
   box-sizing: border-box;
 } 

@@ -1,0 +1,15 @@
+<!--pages/point24/point24.wxml-->
+<view class='container'>
+  <view class='title'>计算24点</view>
+  <button type='primary' class='start-game' bindtap='startGame' wx:if='{{ gameStatus === 0  }}'>开始游戏</button>
+  <button type='primary' class='start-game' bindtap='lookAtTheAnswer' wx:if='{{ gameStatus === 1  }}'>查看答案</button>
+  <button type='primary' class='start-game' bindtap='startGame' wx:if='{{ gameStatus === 2  }}'>开始下一局</button>
+  <view class='cards' wx:if='{{ numArray.length > 0 }}'>
+    <block wx:for='{{ numArray }}' wx:key='{{ index }}'>
+      <view class='card'>{{ item }}</view>
+    </block>
+  </view>
+  <view wx:if='{{ answer && gameStatus === 2 }}' class='answer'>
+    示例答案：{{ answer }}
+  </view>
+</view>

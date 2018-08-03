@@ -1,5 +1,48 @@
 /* pages/question-war/question-war.wxss */
-.begin-btn {
+.container {
+  flex-direction: column;
+}
+.players-wrap {
+  height: 200rpx;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 50rpx;
+  margin: 50rpx 0;
+}
+.player-avatar-wrap {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.player-avatar {
+  width: 200rpx;
+}
+
+.invite-friend-wrap {
+  width: 200rpx;
+  height: 200rpx;
+  position: relative;
+}
+.invite-friend-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 200rpx;
+}
+
+.invite-friend-btn {
+  width: 200rpx;
+  height: 200rpx;
+  border: none;
+  background: transparent;
+}
+.invite-friend-btn::after {
+  border: none;
+}
+
+.zindex3 {
   position: relative;
   z-index: 3;
 }
@@ -39,13 +82,15 @@
   margin-top: 80rpx;
 }
 .modal-box {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
+  /* top: 0;
+  left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0; */
   width: 100vw;
-  height: 100vh;
+  height: 100vh;  
   background-color: #fff;
   z-index: 2;
   display: flex;

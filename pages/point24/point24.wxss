@@ -1,0 +1,25 @@
+/* pages/point24/point24.wxss */
+.container {
+  flex-direction: column;
+  align-items: center;
+  font-size: 40rpx;
+}
+.start-game {
+  margin-top: 50rpx;
+}
+.cards {
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
+}
+.card {
+  width: 120rpx;
+  height: 120rpx;
+  font-size: 80rpx;
+  text-align: center;
+  line-height: 120rpx;
+}
+.answer {
+  font-size: 50rpx;
+  color: #ee0000;
+}

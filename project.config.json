@@ -11,7 +11,7 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.1.1",
+	"libVersion": "2.2.1",
 	"appid": "wx45aa5038b3144f8f",
 	"projectname": "sword",
 	"isGameTourist": false,
@@ -24,13 +24,39 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
 		"game": {
 			"currentL": -1,
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
-			"list": []
+			"current": 2,
+			"list": [
+				{
+					"id": 0,
+					"name": "分享进入",
+					"pathName": "pages/question-war/question-war",
+					"query": "name=wang&room=1000",
+					"scene": "1007"
+				},
+				{
+					"id": -1,
+					"name": "欢迎页",
+					"pathName": "pages/welcome/welcome",
+					"query": "name=wang&room=1000",
+					"scene": "1007"
+				},
+				{
+					"id": -1,
+					"name": "分享进入",
+					"pathName": "pages/point24/point24",
+					"query": "",
+					"scene": "1007"
+				}
+			]
 		}
 	}
 }

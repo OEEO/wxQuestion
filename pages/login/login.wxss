@@ -1,0 +1,14 @@
+/* pages/welcome/welcome.wxss */
+.container {
+  justify-content: center;
+}
+.welcome-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 200rpx;
+}
+.app-logo {
+  width: 200rpx;
+  margin: 50rpx 0;
+}

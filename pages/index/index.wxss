@@ -1,4 +1,7 @@
 /**index.wxss**/
+.container {
+  flex-direction: column;
+}
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -18,4 +21,5 @@
 
 .btn {
   margin-top: 20px;
+  width: 300rpx;
 }

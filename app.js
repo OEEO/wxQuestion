@@ -29,7 +29,11 @@ App({
           });
 
           that.ajax('wxlogin/manual', 'POST', { code: res.code }, res => {
-            console.log('success', res)
+            console.log('登录成功', res)
+            wx.setStorage({
+              key: "swordToken",
+              data: res.token
+            })
           })
 
         }
@@ -57,6 +61,13 @@ App({
         }
       }
     })
+
+    // 获取转发回调信息
+    // wx.getShareInfo({
+    //   success (res) {
+    //     console.log('分享进入')
+    //   }
+    // })
   },
   globalData: {
     userInfo: null,
@@ -66,6 +77,11 @@ App({
   ajax (path, method, data, fn) {
     let url = `https://${config.domain}/api/`
     console.log(url + path)
+    if (method.toLowerCase() === 'post') {
+      method = 'POST'
+    } else {
+      method = 'GET'
+    }
     wx.request({
       url: url + path,
       method: method,
@@ -78,13 +94,15 @@ App({
         if(typeof fn === 'function') {
           fn(res)
         }
+      },
+      fail: function(err) {
+        console.error(err)
       }
     })
   },
-  socket () {
-    let url = url = `https://${config.domain}/api/`
+  socket (roomName) {
     wx.connectSocket({
-      url: url
+      url: 'wss://www.wangchaozhen.com'
     })
   }
 })

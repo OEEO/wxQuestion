@@ -18,6 +18,7 @@ Page({
   },
   onLoad: function () {
     console.log(config.domain)
+    console.log('用户信息', app.globalData.userInfo)
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -61,8 +62,16 @@ Page({
     }) 
   },
   goToQuestionWar () {
+    app.ajax('socket/createRoom', 'GET', '', res => {
+      let room = res.data.socket
+      wx.navigateTo({
+        url: `/pages/question-war/question-war?room=${room}`,
+      })
+    })
+  },
+  goToPoint24 () {
     wx.navigateTo({
-      url: '/pages/question-war/question-war',
+      url: '/pages/point24/point24',
     })
   }
 })

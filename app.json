@@ -1,9 +1,11 @@
 {
   "pages": [
-    "pages/index/index",    
+    "pages/login/login",
+    "pages/index/index",
     "pages/question-war/question-war",
     "pages/logs/logs",
-    "pages/articles/articles"
+    "pages/articles/articles",
+    "pages/point24/point24"
   ],
   "window": {
     "backgroundTextStyle": "light",
