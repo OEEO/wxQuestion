@@ -8,7 +8,8 @@ Page({
   data: {
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    backToPageUrl: ''
   },
 
   /**
@@ -16,13 +17,16 @@ Page({
    */
   onLoad: function (options) {
     let url = options.backToPage ? decodeURIComponent(options.backToPage) : '/pages/index/index'
+    this.setData({
+      backToPageUrl: url
+    })
     console.log(url)
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
       })
-      wx.navigateTo({
+      wx.redirectTo({
         url: url,
       })
     } else if (this.data.canIUse) {
@@ -35,7 +39,7 @@ Page({
           userInfo: res.userInfo,
           hasUserInfo: true
         })
-        wx.navigateTo({
+        wx.redirectTo({
           url: url,
         })
       }
@@ -48,6 +52,9 @@ Page({
             userInfo: res.userInfo,
             hasUserInfo: true
           })
+          wx.redirectTo({
+            url: url,
+          })
         }
       })
     }
@@ -58,6 +65,9 @@ Page({
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
+    })
+    wx.redirectTo({
+      url: this.data.backToPageUrl,
     })
   },
 

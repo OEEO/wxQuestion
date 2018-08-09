@@ -7,7 +7,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-  
+    news: [{title: '这是原来就有的新闻'}]
   },
 
   /**
@@ -29,7 +29,18 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
+    let news = {
+      title: '增加增加'
+    }
+    this.data.news.push(news)
+    this.setData({
+      news: this.data.news
+    })
+    this.data.news[0].show = true
+    this.setData({
+      news: this.data.news
+    })
   },
 
   /**

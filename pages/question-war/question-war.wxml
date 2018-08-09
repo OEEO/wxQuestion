@@ -1,12 +1,13 @@
 <view class='container'>
   <view class='zindex3'>
-    <view>房间号: {{ room }}</view>
+    <view class='room-num'>房间号: {{ room }}</view>
     <view class='players-wrap'>
       <view class='player-avatar-wrap'>
         <block wx:if='{{ player1 !== null }}'>
           <image  mode='widthFix' src='{{ player1.avatarUrl }}' class='player-avatar'></image>      
         </block>
       </view>
+      <view class='vs'>VS</view>
       <view class='player-avatar-wrap'>
         <block wx:if='{{ player2 !== null }}'>
           <image mode='widthFix' src='{{ player2.avatarUrl }}' class='player-avatar'></image>
@@ -22,7 +23,7 @@
     
     <view class='levels'>
       <button type='primary' bindtap='startGame' class='begin-btn' wx:if='{{ isBegin === false }}'>开始对战</button>
-      <view class='title title-num' wx:else>第{{ curIndex ? numToCh[curIndex] : '一' }}题</view>
+      <view class='title title-num' wx:if='{{ isBegin && !isGameOver }}'>第{{ curIndex ? numToCh[curIndex] : '一' }}题</view>
     </view>
   </view>
 
@@ -30,24 +31,40 @@
     <block wx:if='{{ questions.length > 0 }}'>
         <view>
           <view class='title'>{{ questions[curIndex].title }}</view>
-          <block wx:if="{{ questions[curIndex].answers.length > 0 }}" wx:for='{{ questions[curIndex].answers }}' wx:key="index">
-            <button class='option {{ index === clickIndex ? "active" : "" }}' 
+          <block wx:if="{{ questions[curIndex].answers.length > 0 }}" wx:for='{{ questions[curIndex].answers }}' wx:key="{{ index }}">
+            <button 
+            class='option {{ index === clickIndex[0].index || index === clickIndex[1].index || index === curClick ? "active" : ""}}  {{ (gameStatus !== 2 || index === results[curIndex][curPlayerIndex].index || index === results[curIndex][otherPlayerIndex].index || index === questions[curIndex].correctIndex) ? "" : "opacity0" }} {{results[curIndex] !== undefined && index === questions[curIndex].correctIndex && index !== clickIndex[0].index && index !== clickIndex[1].index && move !== "out" ? "corrent-option" : "" }}' 
               bindtap='selectOption' 
               data-index="{{ index }}"
-            >{{ item }}</button>
+            >
+            <icon 
+              class='option-icon {{ clickIndex[curPlayerIndex].index === index ? "" : "opacity0" }}'
+              type="{{ results[curIndex][curPlayerIndex].result || clickIndex[curPlayerIndex].result ? 'success_no_circle' : 'cancel'}}" 
+              size='30'/>
+            <view class='option-text'>{{ item }}</view>
+            <icon 
+              class='option-icon {{ clickIndex[otherPlayerIndex].index === index ? "" : "opacity0" }}'
+              type="{{ results[curIndex][otherPlayerIndex].result ? 'success_no_circle' : 'cancel'}}" 
+              size='30'/>
+            </button>
           </block>
         </view>
-    </block>
-    <block wx:if='{{ result[curIndex] !== undefined }}'>
-      <view class='result'>
-        {{ result[curIndex] ? '回答正确' : '你答错了' }}
-      </view>
     </block>
   </view>
   <view class='modal-box'>
     <view class='game-over' wx:if='{{ isGameOver }}'>
-      <view class='title'>游戏结束</view>
-      <view>你答对了{{ correctNum }}题</view>
+      <view class='title'>游戏结束，{{win}}</view>
+      <view class='ques-ans'>
+        <view class='item' wx:if='{{ selectArr[0].length > 0 }}' wx:for='{{ questions }}' wx:key="{{ index }}">
+          <icon type='{{ selectArr[curPlayerIndex][index] ? "success_no_circle" : "cancel" }}' size='20'></icon>
+          <view class='item-text'>
+            {{ item.title }} {{ item.answers[item.correctIndex] }}
+          </view>
+          <icon type='{{ selectArr[otherPlayerIndex][index] ? "success_no_circle" : "cancel" }}' size='20'></icon>
+        </view>
+      </view>
+      <button type='primary' bindtap='goToIndex' class='goBack-btn'>返回</button>
     </view>
   </view>
+  
 </view>

@@ -16,17 +16,24 @@ Page({
     isCounting: false,
     isShowTitleNum: false,
     curIndex: '', // 当前题号
-    clickIndex: '', //点击的选项
-    result: [],
+    clickIndex: [], //两个人点击的选项
+    curClick: '', //当前玩家点击的选项
+    results: [],
     move: 'in',
     numToCh: ['一', '二', '三', '四', '五'],
     isGameOver: false,
-    correctNum: 0,
+    selectArr: [[],[]],
     room: '',
     player1: null,
     player2: null,
-    curPlayerIndex: ''
-
+    curPlayerIndex: '',
+    otherPlayerIndex: '',
+    gameStatus: 0, //游戏当前状态 0 未开始，1 可以答题， 2 两位玩家已答题，
+    correctCount: [0, 0],
+    win: '',
+    userIndex: 1, // 测试用,
+    hasBeenClick: false, 
+    isTest: false, // 当前是否测试模式
   },
 
   /**
@@ -52,7 +59,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+    
   },
 
   /**
@@ -73,7 +80,10 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function (options) {
-
+    wx.closeSocket()
+    wx.onSocketClose(function (res) {
+      console.log('WebSocket 已关闭！')
+    })
   },
 
   /**
@@ -91,7 +101,7 @@ Page({
   },
 
   /**
-   * 用户点击右上角分享
+   * 用户点击右上角分享，邀请好友
    */
   onShareAppMessage: function () {
     // if (res.from === 'menu') {
@@ -105,86 +115,94 @@ Page({
       imageUrl: '/images/1.jpg'
     }
   },
-
+  goToIndex () {
+    wx.redirectTo({
+      url: '/pages/index/index',
+    })
+  },
   startGame () {
     let that = this
     if(!this.data.player2) {
       wx.showToast({
-        title: '请先邀请好友',
+        title: '点击右边的图标邀请好友',
         icon: 'none'
       })
       return
     }
-    app.ajax('question', 'GET', {level:that.data.level}, res => {
-      this.setData({
-        isBegin: true,
-        questions: res.data.data,
-        isShowTitleNum: true
-      })
-      let timer = setTimeout(() => {
-        this.setData({
-          isShowTitleNum: false,
-          curIndex: 0,
-          move: ''
-        })
-      }, 1200)
+    
+    let sendData = {
+      startGame: true,
+      gameStatus: 1
+    }
+    wx.sendSocketMessage({
+      data: JSON.stringify(sendData)
     })
   },
 
   selectOption (e) {
-    let curPlayerIndex = this.data.curPlayerIndex
-    
-    let index = e.currentTarget.dataset.index
-    let currectIndex = this.data.questions[this.data.curIndex].correctIndex
+    let that = this
+
+    if(!this.data.isTest) {
+      if (this.data.hasBeenClick) {
+        return
+      }
+    }
+
+    this.setData({
+      hasBeenClick: true
+    }) 
+
+    let room = this.data.room
+
+    let index = e.currentTarget.dataset.index //当前点击的选项
+    let correctIndex = this.data.questions[this.data.curIndex].correctIndex
     let result = ''
-    if (index === currectIndex) {
+    if (index === correctIndex) {
       result = true
-      this.setData({
-        correctNum: ++this.data.correctNum
-      })
     } else {
       result = false
     }
-    this.data.result.push(result)
-    this.setData({
-      result: this.data.result,
-      clickIndex: index
-    })
-    console.log(this.data.result)
-    // 移出
-    let moveTimer = setTimeout(() => {
+
+    console.log(this.data.clickIndex)
+    let userIndex = ''
+
+    // 测试，第2次次点击时改变玩家下标
+    if( this.data.isTest ) {
+      userIndex = this.data.userIndex === 0 ? 1 : 0
       this.setData({
-        move: 'out',
-        isCounting: true,
-        clickIndex: ''
+        userIndex: userIndex
       })
+    } else {
+      // 正式
+      userIndex = this.data.curPlayerIndex
+    }
 
-      // 设置移进初始点
-      let timer = setTimeout(() => {
-        let i = ++this.data.curIndex
-        if (i > this.data.questions.length - 1) {
-          this.setData({
-            isGameOver: true
-          })
-          return;
+    this.data.clickIndex[userIndex] = {
+      result: result,
+      index: index
+    }
+    this.setData({
+      curClick: index,
+      clickIndex: this.data.clickIndex
+    })
+
+    let sendData = {
+      answer: true,
+      data: {
+        userIndex: userIndex, 
+        curAns: {
+          index: index,
+          result: result,
+          curTitleNum: that.data.curIndex + 1
         }
-        this.setData({
-          curIndex: i,
-          move: 'in',
-          isShowTitleNum: true
-        })
+      }
+    }
 
-        // 移进
-        let t = setTimeout(() => {
-          this.setData({
-            move: '',
-            isShowTitleNum: false
-          })
-        }, 1200)
+    console.log('发送的答案', sendData)
+    wx.sendSocketMessage({
+      data: JSON.stringify(sendData)
+    })
 
-      }, 600)
-
-    }, 1000)
   },
 
   enterSocketRoom(room) {
@@ -197,14 +215,14 @@ Page({
     let backToPage = encodeURIComponent(`/pages/question-war/question-war?room=${room}`)
     console.log('back', backToPage)
     if (!userData) {
-      wx.navigateTo({
+      wx.redirectTo({
         url: `/pages/login/login?backToPage=${backToPage}`,
       })
       return
     }
-    console.log('用户信息', userData)
     let sendData = {
       addUser: true,
+      isTest: that.data.isTest, //测试自动添加2人
       data: userData
     }
     wx.connectSocket({
@@ -212,39 +230,150 @@ Page({
       success() {
         console.log('进入socket房间', room)
         wx.onSocketOpen(function (res) {
-
-
-          wx.sendSocketMessage({
-            data: JSON.stringify(sendData)
-          })
-
+  
           wx.onSocketMessage(function (res) {
             let data = JSON.parse(res.data)
+            // 房间内已有两位玩家
             if (data.hasTwoPlayer) {
               data.data.some(player => {
-                if (player.username !== username) {
+                if (player.avatarUrl !== userData.avatarUrl) {
 
                   that.setData({
                     player2: player
                   })
 
-                  let curPlayerIndex = ''
+                  let curPlayerIndex = -1
 
-                  if(player.userIndex === 1) {
-                    curPlayerIndex = 2
-                  } else {
+                  if(player.userIndex === 0) {
                     curPlayerIndex = 1
+                  } else {
+                    curPlayerIndex = 0
                   }
                   that.setData({
-                    curPlayerIndex: curPlayerIndex
+                    curPlayerIndex: curPlayerIndex,
+                    otherPlayerIndex: curPlayerIndex === 0 ? 1 : 0
                   })
-
-                  console.log('可以开始游戏')
+                  console.log('otherIndex', that.data.otherPlayerIndex)
                   return true
                 }
               })
             }
+            // 点击开始游戏
+            if (data.startGame) {
+              app.ajax('question', 'GET', { level: that.data.level }, res => {
+                console.log('问题json', res.data.data)
+                that.setData({
+                  isBegin: true,
+                  questions: res.data.data,
+                  isShowTitleNum: true
+                })
+                let timer = setTimeout(() => {
+                  that.setData({
+                    isShowTitleNum: false,
+                    curIndex: 0,
+                    move: ''
+                  })
+                }, 1200)
+              })
+            }
+            // 两位玩家都已回答
+            if (data.twoPlayerAns) {
+              data = data.players
+              console.log('两位玩家已回答', data)
+              let result = []
+              let ans0 = data[0].answers
+              let ans1 = data[1].answers
+              let arr = []
+              if(that.data.curPlayerIndex === 0) {
+                arr[0] = ans0[ans0.length - 1]
+                arr[1] = ans1[ans1.length - 1]
+              } else {
+                arr[1] = ans0[ans0.length - 1]
+                arr[0] = ans1[ans1.length - 1]
+              }
+              that.data.clickIndex[that.data.otherPlayerIndex] = arr[1]
+              that.setData({
+                clickIndex: that.data.clickIndex,
+                hasBeenClick: false
+              })
+              console.log('clickIndex', that.data.clickIndex)
+              that.data.results.push(arr)
+              that.setData({
+                results: that.data.results,
+                gameStatus: 2
+              })
+              console.log('答案数组', that.data.results)
+              // 移出
+              let moveTimer = setTimeout(() => {
+                that.setData({
+                  move: 'out',
+                  isCounting: true,
+                  clickIndex: [],
+                  curClick: '',
+                  gameStatus: 1
+                })
+
+                // 设置移进初始点
+                let timer = setTimeout(() => {
+                  let i = ++that.data.curIndex
+                  if (i > that.data.questions.length - 1) {
+                    let curPlayerIndex = that.data.curPlayerIndex
+                    let otherPlayerIndex = that.data.otherPlayerIndex
+                    that.data.results.forEach((item) => {
+                      that.data.selectArr[curPlayerIndex].push(item[curPlayerIndex].result)
+                      that.data.selectArr[otherPlayerIndex].push(item[otherPlayerIndex].result)
+
+                      if (item[curPlayerIndex].result) {
+                        that.data.correctCount[curPlayerIndex]++
+                      }
+                      if (item[otherPlayerIndex].result) {
+                        that.data.correctCount[otherPlayerIndex]++
+                      }
+                    })
+
+                    let win = ''
+                    let curP = that.data.correctCount[curPlayerIndex]
+                    let othP = that.data.correctCount[otherPlayerIndex]
+                    if (curP > othP) {
+                      win = '你赢了'
+                    } else if (curP < othP) {
+                      win = '你输了'
+                    } else {
+                      win = '打成平局'
+                    }
+
+                    that.setData({
+                      isGameOver: true,
+                      selectArr: that.data.selectArr,
+                      correctCount: that.data.correctCount,
+                      win: win
+                    })
+                    console.log(that.data.selectArr)
+                    return;
+                  }
+                  that.setData({
+                    curIndex: i,
+                    move: 'in',
+                    isShowTitleNum: true
+                  })
+
+                  // 移进
+                  let t = setTimeout(() => {
+                    that.setData({
+                      move: '',
+                      isShowTitleNum: false
+                    })
+                  }, 1200)
+
+                }, 600)
+
+              }, 1500)
+            }
             console.log('收到服务器内容：' + res.data)
+          })
+
+          wx.sendSocketMessage({
+            data: JSON.stringify(sendData)
           })
         })
       }

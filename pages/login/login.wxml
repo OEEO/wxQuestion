@@ -3,6 +3,7 @@
   <view class='welcome-page'>
     <view class='title'>欢迎登录禅与剑的较量</view>
     <image src='/images/app-logo.png' class='app-logo' mode='widthFix'></image>
-    <button type='primary' wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 登录 </button>
+    <button type='primary' wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 登录 </button>
+    <view wx:else>请升级微信版本</view>
   </view>
 </view>

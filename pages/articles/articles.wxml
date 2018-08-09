@@ -1,6 +1,9 @@
 <import src="../../wxParse/wxParse.wxml" />
 <view class='container'>
   <view>
-    <template is="wxParse" data="{{ wxParseData: post.nodes }}"></template>
+    <!-- <template is="wxParse" data="{{ wxParseData: post.nodes }}"></template> -->
+    <view wx:for="{{ news }}" wx:key="{{ index }}" wx:if="{{ item.show }}">
+      {{ item.title }}
+    </view>
   </view>
 </view>

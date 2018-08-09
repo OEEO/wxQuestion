@@ -33,7 +33,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": 4,
 			"list": [
 				{
 					"id": 0,
@@ -55,6 +55,18 @@
 					"pathName": "pages/point24/point24",
 					"query": "",
 					"scene": "1007"
+				},
+				{
+					"id": -1,
+					"name": "英语对战",
+					"pathName": "pages/question-war/question-war",
+					"query": "room=1000"
+				},
+				{
+					"id": -1,
+					"name": "文章页",
+					"pathName": "pages/articles/articles",
+					"query": ""
 				}
 			]
 		}

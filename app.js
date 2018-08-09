@@ -5,6 +5,7 @@ App({
   data: {
     appid:'',
   },
+  // 小程序初始化
   onLaunch: function () {
     let that = this;
     // 展示本地存储能力
@@ -17,16 +18,16 @@ App({
       success: function (res) {
         if (res.code) {
 
-          console.log('获取用户信息', res.code)
-          wx.getUserInfo({
-            success: function (res) {
-              let userInfo = {};
-              userInfo.avatarUrl = res.userInfo.avatarUrl;
-              userInfo.nickName = res.userInfo.nickName;
-              //console.log(objz);
-              wx.setStorageSync('userInfo', userInfo);//存储userInfo
-            }
-          });
+          console.log('res.code', res.code)
+          // wx.getUserInfo({
+          //   success: function (res) {
+          //     let userInfo = {};
+          //     userInfo.avatarUrl = res.userInfo.avatarUrl;
+          //     userInfo.nickName = res.userInfo.nickName;
+          //     //console.log(objz);
+          //     wx.setStorageSync('userInfo', userInfo);//存储userInfo
+          //   }
+          // });
 
           that.ajax('wxlogin/manual', 'POST', { code: res.code }, res => {
             console.log('登录成功', res)
@@ -36,6 +37,8 @@ App({
             })
           })
 
+        } else {
+          consle.log('获取res.code失败')
         }
       }
     });
@@ -90,7 +93,6 @@ App({
         'content-type': "application/x-www-form-urlencoded; charset=utf-8"
       },
       success: function(res) {
-        console.log(res)
         if(typeof fn === 'function') {
           fn(res)
         }

@@ -29,14 +29,10 @@ Page({
       numArray: arr,
       gameStatus: 1
     })
-    wx.showLoading({
-      title: '计算答案中',
-    })
     let result = this.point24(...this.data.numArray)
     if (typeof result === 'string') {
       result = [result]
     }
-    wx.hideLoading()
     this.setData({
       preAnswer: result[0]
     })
