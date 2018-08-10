@@ -278,20 +278,18 @@ Page({
             }
             // 两位玩家都已回答
             if (data.twoPlayerAns) {
+              let curPlayerIndex = that.data.curPlayerIndex
+              let otherPlayerIndex = that.data.otherPlayerIndex
+
               data = data.players
               console.log('两位玩家已回答', data)
               let result = []
               let ans0 = data[0].answers
               let ans1 = data[1].answers
               let arr = []
-              if(that.data.curPlayerIndex === 0) {
-                arr[0] = ans0[ans0.length - 1]
-                arr[1] = ans1[ans1.length - 1]
-              } else {
-                arr[1] = ans0[ans0.length - 1]
-                arr[0] = ans1[ans1.length - 1]
-              }
-              that.data.clickIndex[that.data.otherPlayerIndex] = arr[1]
+              arr[0] = ans0[ans0.length - 1]
+              arr[1] = ans1[ans1.length - 1]
+              that.data.clickIndex[otherPlayerIndex] = arr[otherPlayerIndex]
               that.setData({
                 clickIndex: that.data.clickIndex,
                 hasBeenClick: false
@@ -317,8 +315,6 @@ Page({
                 let timer = setTimeout(() => {
                   let i = ++that.data.curIndex
                   if (i > that.data.questions.length - 1) {
-                    let curPlayerIndex = that.data.curPlayerIndex
-                    let otherPlayerIndex = that.data.otherPlayerIndex
                     that.data.results.forEach((item) => {
                       that.data.selectArr[curPlayerIndex].push(item[curPlayerIndex].result)
                       that.data.selectArr[otherPlayerIndex].push(item[otherPlayerIndex].result)

@@ -6,7 +6,7 @@
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
   </view>
-  <!-- <button class='btn' bindtap='goToArticles'>获取文章</button> -->
+  <button class='btn' bindtap='goToArticles'>获取文章</button>
   <button class='btn' bindtap='goToQuestionWar'>英语对战</button>
   <!-- <button class='btn' bindtap='goToPoint24'>24点</button> -->
 </view>
