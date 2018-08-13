@@ -2,9 +2,6 @@
 import config from 'utils/config.js'
 
 App({
-  data: {
-    appid:'',
-  },
   // 小程序初始化
   onLaunch: function () {
     let that = this;
@@ -74,8 +71,6 @@ App({
   },
   globalData: {
     userInfo: null,
-    appid: 'wx45aa5038b3144f8f',
-    secret: 'ae9956684aea0693838b51358cd03023'
   },
   ajax (path, method, data, fn) {
     let url = `https://${config.domain}/api/`
